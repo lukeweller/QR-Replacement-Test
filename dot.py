@@ -5,7 +5,7 @@ from math import sqrt
 import sys
 
 GIVEBEE_BLACK = '#443822'
-PERCENT_OF_SCREEN = 0.02
+PERCENT_OF_SCREEN = 0.034
 
 def draw3x(beeLogo, instaPhoto):
 	beeLogoDraw = ImageDraw.Draw(beeLogo)
@@ -46,9 +46,8 @@ def draw1x(beeLogo, instaPhoto):
 def dynamic(beeLogo, instaPhoto):
 	beeLogoHeight, beeLogoWidth = beeLogo.size
 	instaPhotoHeight, instaPhotoWidth = instaPhoto.size
-	beeLogoHeightDynamic = instaPhotoHeight * sqrt(PERCENT_OF_SCREEN)
-	beeLogoWidthDynamic = instaPhotoWidth * sqrt(PERCENT_OF_SCREEN)
-	beeLogoDynamic = beeLogo.resize((int(beeLogoHeightDynamic), int(beeLogoWidthDynamic)))
+	resizeRatio = min((instaPhotoWidth*sqrt(PERCENT_OF_SCREEN))/beeLogoWidth, (instaPhotoHeight*sqrt(PERCENT_OF_SCREEN))/beeLogoHeight)
+	beeLogoDynamic = beeLogo.resize((int(beeLogoHeight * resizeRatio), int(beeLogoWidth * resizeRatio)))
 	beeLogoDynamic.save('test.png')
 	return beeLogoDynamic
 
@@ -70,7 +69,7 @@ def main():
 		elif sys.argv[1] == '3':
 			beeLogo = Image.open('./images/bee3x.png')
 		else:
-			sys.exit("INCORRECT BEE SIZE")
+			sys.exit("incorrect asset size, try 1, 2, 3")
 
 	instaPhoto = Image.open('./images/insta2.jpg')
 
@@ -84,7 +83,7 @@ def main():
 		elif sys.argv[1] == '3':
 			beeLogoDynamic = draw3x(beeLogo, instaPhoto)
 		else:
-			sys.exit("INCORRECT BEE SIZE")
+			sys.exit("incorrect asset size, try 1, 2, 3")
 
 	overlay_logo(beeLogoDynamic, instaPhoto)
 
