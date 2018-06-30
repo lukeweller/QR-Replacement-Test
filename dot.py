@@ -1,29 +1,13 @@
 #! /usr/local/bin/python3
 from PIL import Image, ImageDraw
 from random import randint
+from math import sqrt
 import sys
 
-if len(sys.argv) < 2:
-	beeLogo = Image.open('./images/bee3x.png')
-else:
-	if sys.argv[1] == '1':
-		beeLogo = Image.open('./images/bee1x.png')
-	elif sys.argv[1] == '2':
-		beeLogo = Image.open('./images/bee2x.png')
-	elif sys.argv[1] == '3':
-		beeLogo = Image.open('./images/bee3x.png')
-	else:
-		sys.exit("INCORRECT BEE SIZE")
+GIVEBEE_BLACK = '#443822'
+PERCENT_OF_SCREEN = 0.02
 
-instaPhoto = Image.open('./images/insta0.jpg')
-save_image_filename = 'test.png'
-
-beeLogoHeight, beeLogoWidth = beeLogo.size
-instaPhotoHeight, instaPhotoWidth = instaPhoto.size
-
-giveBee_black = '#443822'
-
-def draw3x():
+def draw3x(beeLogo, instaPhoto):
 	beeLogoDraw = ImageDraw.Draw(beeLogo)
 	baseB = 66
 	baseD = 74
@@ -32,10 +16,10 @@ def draw3x():
 		baseD += 16
 		for a in range(12,100,16):
 			if randint(0,10) < 7:
-				beeLogoDraw.ellipse((a, baseB, a+8, baseD), fill=giveBee_black)
-	beeLogo.save(save_image_filename)
+				beeLogoDraw.ellipse((a, baseB, a+8, baseD), fill=GIVEBEE_BLACK)
+	return dynamic(beeLogo, instaPhoto)
 
-def draw2x():
+def draw2x(beeLogo, instaPhoto):
 	beeLogoDraw = ImageDraw.Draw(beeLogo)
 	baseB = 46
 	baseD = 51
@@ -44,10 +28,10 @@ def draw2x():
 		baseD += 10
 		for a in range(10,61,10):
 			if randint(0,10) < 7:
-				beeLogoDraw.ellipse((a, baseB, a+5, baseD), fill=giveBee_black)
-	beeLogo.save(save_image_filename)
+				beeLogoDraw.ellipse((a, baseB, a+5, baseD), fill=GIVEBEE_BLACK)
+	return dynamic(beeLogo, instaPhoto)
 
-def draw1x():
+def draw1x(beeLogo, instaPhoto):
 	beeLogoDraw = ImageDraw.Draw(beeLogo)
 	baseB = 23
 	baseD = 26
@@ -56,10 +40,21 @@ def draw1x():
 		baseD += 5
 		for a in range(5,33,5):
 			if randint(0,10) < 7:
-				beeLogoDraw.ellipse((a, baseB, a+3, baseD), fill=giveBee_black)
-	beeLogo.save(save_image_filename)
+				beeLogoDraw.ellipse((a, baseB, a+3, baseD), fill=GIVEBEE_BLACK)
+	return dynamic(beeLogo, instaPhoto)
 
-def overlay_logo():
+def dynamic(beeLogo, instaPhoto):
+	beeLogoHeight, beeLogoWidth = beeLogo.size
+	instaPhotoHeight, instaPhotoWidth = instaPhoto.size
+	beeLogoHeightDynamic = instaPhotoHeight * sqrt(PERCENT_OF_SCREEN)
+	beeLogoWidthDynamic = instaPhotoWidth * sqrt(PERCENT_OF_SCREEN)
+	beeLogoDynamic = beeLogo.resize((int(beeLogoHeightDynamic), int(beeLogoWidthDynamic)))
+	beeLogoDynamic.save('test.png')
+	return beeLogoDynamic
+
+def overlay_logo(beeLogo, instaPhoto):
+	beeLogoHeight, beeLogoWidth = beeLogo.size
+	instaPhotoHeight, instaPhotoWidth = instaPhoto.size
 	instaPhoto.paste(beeLogo, (instaPhotoHeight - beeLogoHeight, instaPhotoWidth - beeLogoWidth), beeLogo)
 	instaPhoto.save('test0.png')
 
@@ -69,14 +64,28 @@ def main():
 		beeLogo = Image.open('./images/bee3x.png')
 	else:
 		if sys.argv[1] == '1':
-			draw1x()
+			beeLogo = Image.open('./images/bee1x.png')
 		elif sys.argv[1] == '2':
-			draw2x()
+			beeLogo = Image.open('./images/bee2x.png')
 		elif sys.argv[1] == '3':
-			draw3x()
+			beeLogo = Image.open('./images/bee3x.png')
 		else:
 			sys.exit("INCORRECT BEE SIZE")
-	
-	overlay_logo()
+
+	instaPhoto = Image.open('./images/insta2.jpg')
+
+	if len(sys.argv) < 2:
+		beeLogoDynamic = draw3x(beeLogo, instaPhoto)
+	else:
+		if sys.argv[1] == '1':
+			beeLogoDynamic = draw1x(beeLogo, instaPhoto)
+		elif sys.argv[1] == '2':
+			beeLogoDynamic = draw2x(beeLogo, instaPhoto)
+		elif sys.argv[1] == '3':
+			beeLogoDynamic = draw3x(beeLogo, instaPhoto)
+		else:
+			sys.exit("INCORRECT BEE SIZE")
+
+	overlay_logo(beeLogoDynamic, instaPhoto)
 
 main()
