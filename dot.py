@@ -1,11 +1,10 @@
 #! /usr/local/bin/python3
 from PIL import Image, ImageDraw
-from random import randint
 from math import sqrt
-import sys
+import sys, config
 
-GIVEBEE_BLACK = '#443822'
-PERCENT_OF_SCREEN = 0.034
+GIVEBEE_BLACK = config.GIVEBEE_BLACK
+PERCENT_OF_SCREEN = config.PERCENT_OF_SCREEN
 
 def drawx36(beeLogo, instaPhoto):
 	beeLogoDynamic = dynamic(beeLogo, instaPhoto)
@@ -45,7 +44,7 @@ def dynamic(beeLogo, instaPhoto):
 	beeLogoHeight, beeLogoWidth = beeLogo.size
 	instaPhotoHeight, instaPhotoWidth = instaPhoto.size
 	resizeRatio = min((instaPhotoWidth*sqrt(PERCENT_OF_SCREEN))/beeLogoWidth, (instaPhotoHeight*sqrt(PERCENT_OF_SCREEN))/beeLogoHeight)
-	beeLogoDynamic = beeLogo.resize((int(beeLogoHeight * resizeRatio), int(beeLogoWidth * resizeRatio)))
+	beeLogoDynamic = beeLogo.resize((int(beeLogoHeight * resizeRatio), int(beeLogoWidth * resizeRatio)), Image.ANTIALIAS)
 	return beeLogoDynamic
 
 def overlay_logo(beeLogo, instaPhoto):
@@ -56,8 +55,9 @@ def overlay_logo(beeLogo, instaPhoto):
 
 def write_log(user_id):
 	with open('log.txt', 'w') as log:
-		print(pad_user_id(str(bin(user_id))[2:]))
 		log.write(pad_user_id(str(bin(user_id))[2:]))
+	with open('log_id.txt', 'w') as log_id:
+		log_id.write(str(user_id))
 
 def pad_user_id(user_id):
 	while len(user_id) < 36:
@@ -82,7 +82,7 @@ def main():
 		else:
 			sys.exit("incorrect asset size, try 1, 2, 3")
 
-	instaPhoto = Image.open('./images/insta2.jpg')
+	instaPhoto = Image.open('./images/insta0.jpg')
 
 	overlay_logo(drawx36(beeLogo, instaPhoto), instaPhoto)
 
