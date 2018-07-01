@@ -60,13 +60,13 @@ def write_log(user_id):
 		log.write(pad_user_id(str(bin(user_id))[2:]))
 
 def pad_user_id(user_id):
-	while len(user_id) < 25:
+	while len(user_id) < 36:
 		user_id = '0' + user_id
 	return user_id
 
 def main():
 
-	user_id = int(sys.argv[3])
+	user_id = int(sys.argv[2])
 
 	write_log(user_id)
 
@@ -84,14 +84,6 @@ def main():
 
 	instaPhoto = Image.open('./images/insta2.jpg')
 
-	if len(sys.argv) < 3:
-		overlay_logo(drawx25(beeLogo, instaPhoto), instaPhoto)
-	else: 
-		if sys.argv[2] == '25' or sys.argv[2] == '5':
-			overlay_logo(drawx25(beeLogo, instaPhoto), instaPhoto)
-		elif sys.argv[2] == '36' or sys.argv[2] == '6':
-			overlay_logo(drawx36(beeLogo, instaPhoto), instaPhoto)
-		else: 
-			sys.exit("incorrect dot count, try 25, 36")
+	overlay_logo(drawx36(beeLogo, instaPhoto), instaPhoto)
 
 main()
