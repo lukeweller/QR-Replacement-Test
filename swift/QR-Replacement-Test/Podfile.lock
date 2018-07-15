@@ -1,0 +1,16 @@
+PODS:
+  - Toucan (1.0.0)
+
+DEPENDENCIES:
+  - Toucan
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Toucan
+
+SPEC CHECKSUMS:
+  Toucan: 61867fb10948c02e9804280a95eb183e98eac97a
+
+PODFILE CHECKSUM: b3dfdf0c450ed46d92edf40f059164c968b6a731
+
+COCOAPODS: 1.5.3
